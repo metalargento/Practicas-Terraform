@@ -29,3 +29,15 @@ variable "tags" {
   
 }
 
+variable "sg_ingress_cidr" {
+  description = "CIDR for ingress traffic"
+  type        = string
+  
+}
+
+variable "ec2_specs" {
+  description = "Specifications for EC2 instance"
+  type = map(string)
+
+}
+  
