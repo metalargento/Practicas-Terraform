@@ -94,66 +94,30 @@ dynamic "ingress" {
   }
 
   tags = {
-    Name = "Public Instance SG"
+    Name = "Public Instance SG-${local.sufix}"
   }
   
 }
-# asociacion de la tabla de enrutamiento publica con el subnet publico
-# resource "aws_route_table_association" "crta_public_subnet" {
-#   subnet_id      = aws_subnet.public_subnet.id
-#   route_table_id = aws_route_table.public_crt.id
-# }
 
-# resource "aws_security_group" "sg_public_instance" {
-#   name        = "Public Instance SG"
-#   description = "Allow SSH inbound traffic and all outbound traffic"
-#   vpc_id      = aws_vpc.vpc_virginia.id
+module "mybucket" {
+  source = "./Modules/S3"
+  bucket_name = "nombreunico12345678"
+}
 
-#   tags = {
-#     Name = "allow_tls"
-#   }
-# }
+output "name" {
+  value = module.mybucket.s3_bucket_arn
+}
 
-# resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
-#   security_group_id = aws_security_group.sg_public_instance.id
-#   cidr_ipv4         = var.sg_ingress_cidr
-#   from_port         = 22
-#   ip_protocol       = "tcp"
-#   to_port           = 22
-# }
+module "terraform_state_backend" {
+     source = "cloudposse/tfstate-backend/aws"
+     version     = "1.8.0"
+     namespace  = "example"
+     stage      = "env"
+     name       = "terraform"
+     environment = "us-east-1"
+     attributes = ["state"]
 
-
-# resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
-#   security_group_id = aws_security_group.sg_public_instance.id
-#   cidr_ipv4         = ["0.0.0.0/0"]
-#   ip_protocol       = "-1" # semantically equivalent to all ports
-# }
-
-
-# resource "aws_vpc" "vpc_ohio" {
-#   cidr_block = var.vpc_ohio_cidr
-#    tags = var.tags
-#     provider = aws.vpc_ohio
-# }
-
-# variable "vpc_virginia_cidr" {
-#   description = "CIDR block for Virginia VPC"
-#   type        = string
-#   default     = "10.10.0.0/16"
-# }
-
-# variable "vpc_ohio_cidr" {
-#   description = "CIDR block for Ohio VPC"
-#   type        = string
-#   default     = "10.20.0.0/16" 
-# }
-
-# variable "tags" {
-#   description = "Tags to apply to resources"
-#   type        = map(string)
-#   default = {
-#     Name = "My_VPC"
-#     env  = "Dev"
-#   }
-  
-# }
+     terraform_backend_config_file_path = "."
+     terraform_backend_config_file_name = "backend.tf"
+     force_destroy                      = false
+   }
