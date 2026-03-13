@@ -2,7 +2,7 @@ virginia_cidr = "10.10.0.0/16"
 # public_subnet = "10.10.1.0/24"
 # private_subnet = "10.10.2.0/24"
 
-subnets = ["10.10.0.0/24","10.10.0.1/24"]
+subnets = ["10.10.1.0/24","10.10.0.0/24"]
 
 tags = {
   "env" = "desa"
@@ -10,6 +10,8 @@ tags = {
   "clowd" = "aws"
   "IAC" = "terraform"
   "IAC_Version" = "v1.14.3"
+  "project"     = "cerberus"
+  "region"      = "us-east-1"
 }
 
 sg_ingress_cidr = "0.0.0.0/0"
@@ -19,6 +21,6 @@ ec2_specs = {
   instance_type = "t2.micro"
 }
 
-enable_monitoring = 0
+enable_monitoring = false
 
 ingres_port_list = [22,80,443]

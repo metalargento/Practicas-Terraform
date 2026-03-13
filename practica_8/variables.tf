@@ -5,7 +5,7 @@ variable "virginia_cidr" {
 
 variable "subnets" {
   description = "Lista de subnets"
-  type = string
+  type = list(string)
 }
 # variable "public_subnet" {
 #     description = "CIDR public subnet"
@@ -22,11 +22,6 @@ variable "subnets" {
 variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)
-  default = {
-    name = "My_VPC"
-    env  = "Dev"
-  }
-  
 }
 
 variable "sg_ingress_cidr" {
